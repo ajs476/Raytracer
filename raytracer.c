@@ -175,6 +175,52 @@ double* next_vector(FILE* json) {
   expect_c(json, ']');
   return v;
 }
+// compute dot product of two vectors 
+double dot(double* a, double* b) {
+    double result;
+    result = a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+    return result;
+}
+
+// lighting equations
+double fangular(double* Vo, double* Vl, double a1, double angle) {
+    double dotResult = dot(Vo, Vl);
+    if (acos(dotResult) > angle / 2) {
+        return 0;
+    } else {
+        return pow(dotResult, a1);
+    }
+}
+
+double fradial(double a2, double a1, double a0, double d) {
+    double quotient = a2 * sqr(d) + a1 * d + a0;
+    if (quotient == 0) {
+        return 0;
+    }
+    if (d == INFINITY) {
+        return 1;
+    } else {
+        return 1.0 / quotient;
+    }
+}
+
+double diffuse_light(double Kd, double Il, double* N, double* L) {
+    double dotResult = dot(N, L);
+    if (dotResult > 0) {
+        return Kd * Il * dotResult;
+    } else {
+        return 0;
+    }
+}
+
+double specular_light(double Ks, double Il, double* V, double* R, double* N, double* L, double ns) {
+    double dotResult = dot(V, R);
+    if (dotResult > 0 && dot(N, L) > 0) {
+        return Ks * Il * pow(dotResult, ns);
+    } else {
+        return 0;
+    }
+}
 
 // read scene
 void read_scene(char* filename) {
