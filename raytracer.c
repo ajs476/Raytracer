@@ -175,12 +175,50 @@ double* next_vector(FILE* json) {
   expect_c(json, ']');
   return v;
 }
-// compute dot product of two vectors 
+
+// compute dot product of two vectors
 double dot(double* a, double* b) {
     double result;
     result = a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
     return result;
 }
+
+// compute magnitude of a vector
+double magnitude(double* v){
+    return sqrt(sqr(v[0]) + sqr(v[1]) + sqr(v[2]));
+}
+
+// scale a vector by a scalor value
+void scale(double* v, double s){
+    v[0] *= s;
+    v[1] *= s;
+    v[2] *= s;
+}
+
+// subract two vectors
+void subtract(double* v1, double* v2){
+    v1[0] -= v2[0];
+    v1[1] -= v2[1];
+    v1[2] -= v2[2];
+}
+
+// calculate reflection
+void reflect(double* v, double* n, double* r){
+    double dotResult = dot(v, n);
+    dotResult *= 2;
+    double nNew[3] = {
+        n[0],
+        n[1],
+        n[2]
+    };
+    scale(nNew, dotResult);
+    r[0] = v[0];
+    r[1] = v[1];
+    r[2] = v[2];
+    subtract(r, nNew);
+}
+
+
 
 // lighting equations
 double fangular(double* Vo, double* Vl, double a1, double angle) {
