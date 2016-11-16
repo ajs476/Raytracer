@@ -601,42 +601,50 @@ int main(int argc, char **argv) {
                     normalize(rdn);
                     closest_shadow_object = 0;
                     for (int j = 0; object_array[j] != 0; j++){
+                        //printf("wtf..\n");
                         double t = 0;
                         if (object_array[j] == object_array[best]){
+                            //printf("wtf..\n");
                             continue;
                         }
-                        switch(object_array[i]->kind) {
+                        switch(object_array[j]->kind) {
+                                //printf("switch..\n");
                             case 0:
                                 // pass, it's a camera
+                                //printf("switch camera i:%d..\n", i);
+
                                 break;
                             case 1:
                                 // intersectin test for sphere
+                                printf("switch. sphere.\n");
                                 t = sphere_intersection(ron, rdn,
-                                                        object_array[i]->sphere.position,
-                                                        object_array[i]->sphere.radius);
+                                                        object_array[j]->sphere.position,
+                                                        object_array[j]->sphere.radius);
                                 break;
                             case 2:
+                                printf("switch plane..\n");
                                 // intersection test for plane
                                 t = plane_intersection(ron, rdn,
-                                                       object_array[i]->plane.position,
-                                                       object_array[i]->plane.normal);
+                                                       object_array[j]->plane.position,
+                                                       object_array[j]->plane.normal);
                                 break;
                             case 3:
+                                printf("switch light..\n");
                                 // pass, it's a light
                                 break;
                             default:
+                                printf("switch rip..\n");
                                 // rip
                                 exit(1);
                         }
+                        
+                        
                         if (t>0 && t<magnitude(rdn)){
                             closest_shadow_object = 1;
                             break;
                         }
                     }
                     if (closest_shadow_object == 0){
-                        color[0] = 0;
-                        color[1] = 0;
-                        color[2] = 0;
                         double N[3];
                         if (object_array[best]->kind == 1){
                             N[0] = ron[0] - object_array[best]->sphere.position[0];
@@ -690,10 +698,14 @@ int main(int argc, char **argv) {
                 new.blue = color[2];
                 image[pixelNum] = new;
                 fprintf(output, "%i %i %i ", new.red, new.green, new.blue);
+                // reset color to be black
+                color[0] = 0;
+                color[1] = 0;
+                color[2] = 0;
             } else {
                 // no object here, draw black pixel instead
                 image[pixelNum] = new;
-                fprintf(output, "255 255 255 ");
+                fprintf(output, "0 0 0 ");
             }
             pixelNum++;
         }

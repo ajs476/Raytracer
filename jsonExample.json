@@ -8,7 +8,7 @@
     "radius": 2.0,
     "diffuse_color": [1, 0, 0],
     "specular_color": [1, 1, 1],
-    "position": [0, 1, 5]},
+    "position": [0, 1.75, 5]},
  {
     "type": "plane",
     "diffuse_color": [0, 1, 0],
